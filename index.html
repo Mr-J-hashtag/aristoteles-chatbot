@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aristoteles – Wege zur Glückseligkeit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --marble: #f5f0e8;
+    --dark: #1a1208;
+    --mid: #3d2b0a;
+    --ink: #2c1f06;
+    --stone: #8b7355;
+    --shadow: rgba(26,18,8,0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: #1a1208;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,115,85,0.08) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    font-family: 'EB Garamond', Georgia, serif;
+    color: var(--gold-light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    width: 100%;
+    max-width: 760px;
+    padding: 2.5rem 1.5rem 1rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .ornament {
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.4em;
+    opacity: 0.7;
+    margin-bottom: 0.5rem;
+  }
+
+  header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 30px rgba(201,168,76,0.4);
+    line-height: 1.2;
+  }
+
+  header p {
+    font-style: italic;
+    color: var(--stone);
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .divider {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 1.2rem auto;
+  }
+
+  /* Lebensformen Karten */
+  .lebensformen {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0 1.5rem;
+    max-width: 760px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+  }
+
+  .lf-card {
+    flex: 1;
+    min-width: 180px;
+    max-width: 230px;
+    background: linear-gradient(135deg, rgba(61,43,10,0.6), rgba(26,18,8,0.8));
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+  }
+
+  .lf-card:hover {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(61,43,10,0.9), rgba(40,28,8,0.9));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(201,168,76,0.15);
+  }
+
+  .lf-card .lf-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .lf-card .lf-title {
+    font-size: 0.95rem;
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  .lf-card .lf-desc {
+    font-size: 0.78rem;
+    color: var(--stone);
+    margin-top: 0.3rem;
+  }
+
+  /* Chat Container */
+  .chat-container {
+    max-width: 760px;
+    width: 100%;
+    padding: 0 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-box {
+    background: linear-gradient(180deg, rgba(30,20,5,0.95), rgba(22,14,4,0.98));
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 6px;
+    padding: 1.5rem;
+    min-height: 320px;
+    max-height: 420px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--stone) transparent;
+  }
+
+  .chat-box::-webkit-scrollbar { width: 4px; }
+  .chat-box::-webkit-scrollbar-thumb { background: var(--stone); border-radius: 4px; }
+
+  .message {
+    display: flex;
+    gap: 0.8rem;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.user { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .avatar.ari { background: radial-gradient(circle, rgba(61,43,10,1), rgba(26,18,8,1)); }
+  .avatar.usr { background: rgba(40,30,10,0.8); }
+
+  .bubble {
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    line-height: 1.65;
+    font-size: 0.97rem;
+  }
+
+  .message.ari .bubble {
+    background: linear-gradient(135deg, rgba(61,43,10,0.7), rgba(40,28,8,0.8));
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gold-light);
+    border-radius: 2px 8px 8px 8px;
+  }
+
+  .message.user .bubble {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.25);
+    color: #d4c09a;
+    border-radius: 8px 2px 8px 8px;
+    text-align: right;
+  }
+
+  .sender-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    margin-bottom: 0.3rem;
+  }
+
+  .message.user .sender-name { text-align: right; }
+
+  /* Eingabe */
+  .input-area {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    padding-bottom: 2rem;
+  }
+
+  textarea {
+    flex: 1;
+    background: rgba(30,20,5,0.9);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 4px;
+    color: var(--gold-light);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    resize: none;
+    min-height: 50px;
+    max-height: 120px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  textarea:focus { border-color: rgba(201,168,76,0.6); }
+  textarea::placeholder { color: var(--stone); font-style: italic; }
+
+  button.send-btn {
+    background: linear-gradient(135deg, #a07830, var(--gold));
+    color: var(--dark);
+    border: none;
+    border-radius: 4px;
+    padding: 0 1.2rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  button.send-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  button.send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* Typing indicator */
+  .typing { display: flex; gap: 4px; align-items: center; padding: 0.5rem 0; }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); opacity: 0.6;
+    animation: blink 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:0.9} }
+
+  .hint {
+    text-align: center;
+    font-style: italic;
+    color: var(--stone);
+    font-size: 0.8rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Text Panel */
+  .text-toggle {
+    max-width: 760px;
+    width: 100%;
+    padding: 0 1.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .text-toggle-btn {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    color: var(--stone);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .text-toggle-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  .text-panel {
+    display: none;
+    background: rgba(20,12,3,0.95);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 1.2rem 1.5rem;
+    max-height: 280px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--stone) transparent;
+  }
+
+  .text-panel::-webkit-scrollbar { width: 4px; }
+  .text-panel::-webkit-scrollbar-thumb { background: var(--stone); }
+
+  .text-panel.open { display: block; }
+
+  .text-panel-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .text-line {
+    display: flex;
+    gap: 0.8rem;
+    line-height: 1.6;
+    font-size: 0.88rem;
+    padding: 1px 4px;
+    border-radius: 2px;
+    transition: background 0.3s;
+  }
+
+  .line-num {
+    color: var(--stone);
+    font-size: 0.75rem;
+    min-width: 24px;
+    text-align: right;
+    flex-shrink: 0;
+    padding-top: 2px;
+    user-select: none;
+    opacity: 0.6;
+  }
+
+  .line-text { color: #c8b48a; }
+
+  .text-line.highlighted {
+    background: rgba(201,168,76,0.18);
+    border-left: 2px solid var(--gold);
+    padding-left: 6px;
+  }
+
+  .text-line.highlighted .line-num { opacity: 1; color: var(--gold); }
+  .text-line.highlighted .line-text { color: var(--gold-light); }
+
+  /* Textverweis-Badge in Bubble */
+  .text-ref {
+    display: inline-block;
+    margin-top: 0.5rem;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 3px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    color: var(--gold);
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
+  }
+
+  .text-ref:hover { background: rgba(201,168,76,0.22); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ornament">✦ &nbsp; Philosophia &nbsp; ✦</div>
+  <h1>Aristoteles</h1>
+  <p>Wege zur Glückseligkeit – Nikomachische Ethik</p>
+  <div class="divider"></div>
+</header>
+
+<div class="lebensformen">
+  <div class="lf-card" onclick="askAbout('a')">
+    <div class="lf-label">Lebensform (a)</div>
+    <div class="lf-title">Leben des Genusses</div>
+    <div class="lf-desc">Der Weg der Vielen</div>
+  </div>
+  <div class="lf-card" onclick="askAbout('b')">
+    <div class="lf-label">Lebensform (b)</div>
+    <div class="lf-title">Leben im Dienst des Staates</div>
+    <div class="lf-desc">Der Weg der Ehre</div>
+  </div>
+  <div class="lf-card" onclick="askAbout('c')">
+    <div class="lf-label">Lebensform (c)</div>
+    <div class="lf-title">Hingabe an die Philosophie</div>
+    <div class="lf-desc">Der Weg der Weisheit</div>
+  </div>
+</div>
+
+<div class="text-toggle">
+  <button class="text-toggle-btn" onclick="toggleText()" id="textToggleBtn">
+    <span>📜</span> <span>Originaltext einblenden – Nikomachische Ethik (M2)</span> <span id="toggleArrow">▾</span>
+  </button>
+  <div class="text-panel" id="textPanel">
+    <div class="text-panel-title">M2 · Aristoteles: Drei Lebensformen · Nikomachische Ethik (350 v. Chr.)</div>
+    <div id="textLines"></div>
+  </div>
+</div>
+
+<div class="chat-container">
+  <div class="chat-box" id="chatBox"></div>
+  <div class="input-area">
+    <textarea id="userInput" placeholder="Stelle Aristoteles eine Frage…" rows="2" onkeydown="handleKey(event)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Senden</button>
+  </div>
+  <p class="hint">Wähle eine Lebensform als Gesprächseinstieg – oder antworte Aristoteles direkt</p>
+</div>
+
+<script>
+// ── Originaltext (M2) mit Zeilennummern ──────────────────────────────────────
+const TEXT_LINES = [
+  "Eine Meinung darüber, was oberster Wert und was",
+  "Glück sei, gewinnt man wohl nicht ohne Grund aus den",
+  "bekannten Lebensformen. In der Mehrzahl entschei-",
+  "den sich die Leute, d. h. die besonders grobschlächtig-",
+  "en Naturen, für den Genuss und finden deshalb ihr",
+  "Genügen an dem Leben des Genusses (a). Es gibt näm-",
+  "lich drei Hauptformen: erstens die soeben erwähnte",
+  "(a), zweitens das Leben im Dienste des Staates (b),",
+  "drittens das Leben als Hingabe an die Philosophie (c).",
+  "a) Die Vielen also bekunden ganz und gar ihren",
+  "knechtischen Sinn, da sie sich ein animalisches",
+  "Dasein aussuchen. Und doch bekommen sie einen",
+  "Schein von Recht, weil es unter den Hochgestellten",
+  "so manchen gibt, der ähnliche Passionen hat wie",
+  "Sardanapal [ein assyrischer König, dessen Lebens-",
+  "wandel durch Lust bestimmt war].",
+  "b) Edle und aktive Naturen entscheiden sich für die",
+  "Ehre.\" Denn das ist im Ganzen gesehen das Ziel ei-",
+  "nes Lebens für den Staat. Doch ist dieses Ziel wohl",
+  "etwas äußerlich und kann nicht als das gelten, was",
+  "wir suchen. Hier liegt nämlich der Schwerpunkt",
+  "mehr in dem, der die Ehre spendet, als in dem, der",
+  "sie empfängt. [...] Außerdem ist anzunehmen, dass",
+  "man nach Ehre strebt, um sich des eigenen Wertes",
+  "zu vergewissern. Deshalb sucht man von Urteilsfähi-",
+  "gen geehrt zu werden, von Menschen, die uns",
+  "kennen, und zwar auf Grund der Tüchtigkeit. Je-",
+  "denfalls ergibt sich aus diesem Verhalten ganz klar,",
+  "dass die Tüchtigkeit der höhere Wert ist, und man",
+  "darf dann vielleicht eher in ihr das Ziel des Lebens",
+  "für den Staat erkennen. Und doch ist auch sie noch",
+  "nicht ganz Ziel im vollen Sinn. Denn man kann",
+  "sich die Möglichkeit vorstellen, dass jemand die",
+  "Tüchtigkeit zwar hat, aber dabei schläft oder ein",
+  "Leben lang untätig, ja darüber hinaus mit größtem",
+  "Leid und Unglück beladen ist. Wer aber ein solches",
+  "Leben führt, den wird niemand als glücklich be-",
+  "zeichnen [...].",
+  "c) Die dritte Lebensform ist die Hingabe an die Philo-",
+  "sophie.",
+];
+
+// Referenz-Map: welche Zeilenbereiche zu welchen Themen gehören
+const TEXT_REFS = {
+  intro:     { lines: [1,9],   label: "Z. 1–9: Drei Lebensformen – Überblick" },
+  genuss:    { lines: [10,16], label: "Z. 10–16: Lebensform (a) – Genuss" },
+  ehre:      { lines: [17,38], label: "Z. 17–38: Lebensform (b) – Ehre & Staat" },
+  tugend:    { lines: [27,31], label: "Z. 27–31: Tüchtigkeit als höherer Wert" },
+  schlaf:    { lines: [32,38], label: "Z. 32–38: Tüchtigkeit ohne Tätigkeit genügt nicht" },
+  philo:     { lines: [39,40], label: "Z. 39–40: Lebensform (c) – Philosophie" },
+};
+
+// ── System-Prompt ─────────────────────────────────────────────────────────────
+const SYSTEM_PROMPT = `Du bist Aristoteles (384–322 v. Chr.). Du sprichst mit Schülerinnen und Schülern über deine Nikomachische Ethik – die drei Lebensformen und die Glückseligkeit (Eudaimonia).
+
+METHODE: Sokratisches Fragen.
+Du gibst NIEMALS Antworten direkt vor. Du führst die Schüler:innen durch Fragen zur eigenen Erkenntnis.
+
+Konkrete Regeln:
+- Beantworte Fragen NICHT direkt. Stelle eine Gegenfrage, die zum Nachdenken bringt.
+- Würdige Antworten, hake nach, vertiefe.
+- Nutze Alltagsbeispiele ("Stell dir vor, du...").
+- Bei richtiger Richtung: lobend bestätigen + vertiefende Frage.
+- Bei Irrtum: keine direkte Korrektur, sondern eine enthüllende Gegenfrage.
+- Antworten: kurz (2–4 Sätze + Frage). Fast IMMER mit Frage enden.
+- Gelegentlich griechische Begriffe (Eudaimonia, Arete), kurz erklärt.
+- Tonalität: warm, weise, neugierig – nie belehrend.
+
+TEXTVERWEIS-REGEL (sehr wichtig!):
+Wenn ein Schüler / eine Schülerin erkennbar nicht weiterkommt (z.B. sagt "Ich weiß nicht", "Keine Ahnung", "Ich verstehe das nicht", antwortet sehr knapp oder wirkt ratlos), dann:
+1. Mache weiter sokratisch, ABER
+2. Füge am Ende deiner Antwort einen Textverweis in exakt diesem Format ein:
+   [TEXTVERWEIS:schlüssel]
+   Wobei der Schlüssel einer dieser Werte ist: intro | genuss | ehre | tugend | schlaf | philo
+   Wähle den Schlüssel, der zur aktuellen Frage passt.
+   Beispiel: Wenn jemand bei Lebensform (a) nicht weiterkommt → [TEXTVERWEIS:genuss]
+   Wenn jemand bei Lebensform (b) und Ehre stockt → [TEXTVERWEIS:ehre]
+   Wenn jemand bei der Tüchtigkeit nicht weiterkommt → [TEXTVERWEIS:tugend]
+   Gib diesen Verweis NUR, wenn der Schüler wirklich nicht weiterkommt. Bei aktivem Gespräch: kein Verweis.
+
+Hintergrundwissen (nicht direkt verraten):
+(a) Genuss: animalisch, knechtisch – entspricht nicht der menschlichen Vernunft (Arete). Z. 10–16.
+(b) Ehre/Staat: edler, aber abhängig vom Urteil anderer – kein Selbstzweck. Z. 17–38.
+(c) Philosophie: höchste Form – entspricht der Vernunft, dem Wesen des Menschen. Z. 39–40.
+Eudaimonia = Tätigkeit der Seele gemäß Tugend, kein Gefühl.
+
+Antworte immer auf Deutsch.`;
+
+// ── State ─────────────────────────────────────────────────────────────────────
+const history = [];
+let textOpen = false;
+
+// ── Text Panel aufbauen ───────────────────────────────────────────────────────
+function buildTextPanel() {
+  const container = document.getElementById('textLines');
+  TEXT_LINES.forEach((line, i) => {
+    const num = i + 1;
+    const div = document.createElement('div');
+    div.className = 'text-line';
+    div.id = `tl-${num}`;
+    div.innerHTML = `<span class="line-num">${num}</span><span class="line-text">${line}</span>`;
+    container.appendChild(div);
+  });
+}
+
+function toggleText() {
+  textOpen = !textOpen;
+  document.getElementById('textPanel').classList.toggle('open', textOpen);
+  document.getElementById('toggleArrow').textContent = textOpen ? '▴' : '▾';
+  const btn = document.getElementById('textToggleBtn');
+  btn.querySelector('span:nth-child(2)').textContent = textOpen
+    ? 'Originaltext ausblenden'
+    : 'Originaltext einblenden – Nikomachische Ethik (M2)';
+}
+
+function highlightLines(key) {
+  // Panel öffnen falls zu
+  if (!textOpen) toggleText();
+
+  // Alle Highlights entfernen
+  document.querySelectorAll('.text-line').forEach(el => el.classList.remove('highlighted'));
+
+  const ref = TEXT_REFS[key];
+  if (!ref) return;
+
+  const [from, to] = ref.lines;
+  for (let i = from; i <= to; i++) {
+    const el = document.getElementById(`tl-${i}`);
+    if (el) el.classList.add('highlighted');
+  }
+
+  // Zu erster hervorgehobener Zeile scrollen
+  setTimeout(() => {
+    const first = document.getElementById(`tl-${from}`);
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 150);
+}
+
+// ── Chat ──────────────────────────────────────────────────────────────────────
+function parseReply(raw) {
+  // Extrahiere optionalen Textverweis aus der Antwort
+  const refMatch = raw.match(/\[TEXTVERWEIS:(\w+)\]/);
+  const refKey = refMatch ? refMatch[1] : null;
+  const cleanText = raw.replace(/\[TEXTVERWEIS:\w+\]/g, '').trim();
+  return { cleanText, refKey };
+}
+
+function addMessage(role, text, refKey) {
+  const box = document.getElementById('chatBox');
+  const isAri = role === 'ari';
+  const div = document.createElement('div');
+  div.className = `message ${isAri ? 'ari' : 'user'}`;
+
+  let refBadge = '';
+  if (refKey && TEXT_REFS[refKey]) {
+    const label = TEXT_REFS[refKey].label;
+    refBadge = `<br><span class="text-ref" onclick="highlightLines('${refKey}')">📜 Im Text nachschauen: ${label}</span>`;
+  }
+
+  div.innerHTML = `
+    <div class="avatar ${isAri ? 'ari' : 'usr'}">${isAri ? '🏛️' : '📖'}</div>
+    <div>
+      <div class="sender-name">${isAri ? 'Aristoteles' : 'Du'}</div>
+      <div class="bubble">${text.replace(/\n/g, '<br>')}${refBadge}</div>
+    </div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showTyping() {
+  const box = document.getElementById('chatBox');
+  const div = document.createElement('div');
+  div.className = 'message ari';
+  div.id = 'typing';
+  div.innerHTML = `
+    <div class="avatar ari">🏛️</div>
+    <div><div class="sender-name">Aristoteles</div>
+    <div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+async function sendMessage(overrideText) {
+  const input = document.getElementById('userInput');
+  const text = overrideText || input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  document.getElementById('sendBtn').disabled = true;
+
+  addMessage('user', text);
+  history.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const response = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: history
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content?.map(b => b.text || '').join('') || 'Ich kann gerade nicht antworten.';
+    removeTyping();
+    const { cleanText, refKey } = parseReply(raw);
+    addMessage('ari', cleanText, refKey);
+    history.push({ role: 'assistant', content: raw });
+  } catch (e) {
+    removeTyping();
+    addMessage('ari', 'Verzeihung – es gab ein technisches Problem. Versuche es noch einmal.');
+  }
+
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('userInput').focus();
+}
+
+function askAbout(form) {
+  const questions = {
+    a: 'Ich möchte über die erste Lebensform sprechen – das Leben des Genusses.',
+    b: 'Ich möchte über das Leben im Dienst des Staates und der Ehre sprechen.',
+    c: 'Ich möchte über die Hingabe an die Philosophie als Lebensform sprechen.'
+  };
+  sendMessage(questions[form]);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  buildTextPanel();
+  setTimeout(() => {
+    const greeting = `Χαῖρε – sei gegrüßt, junger Mensch! Ich bin Aristoteles aus Stageira.\n\nBevor wir über meine Schriften sprechen, möchte ich dich etwas fragen – und ich bitte dich, ehrlich zu antworten, nicht so, wie du glaubst, dass ich es hören will:\n\nWofür stehst du morgens auf? Was ist es, das dein Leben antreibt – was willst du wirklich?`;
+    addMessage('ari', greeting);
+    history.push({ role: 'assistant', content: greeting });
+  }, 400);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "aristoteles-chatbot",
+  "version": "1.0.0",
+  "description": "Aristoteles Chatbot für den Philosophieunterricht",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
